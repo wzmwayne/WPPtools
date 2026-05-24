@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../ico/mouse.png</file>
+        <file>../ico/pen.png</file>
+        <file>../ico/eraser.png</file>
+        <file>../ico/exit.png</file>
+    </qresource>
+</RCC>

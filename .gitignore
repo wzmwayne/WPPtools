@@ -1,0 +1,26 @@
+# Build
+build/
+dist/
+
+# Installer
+*.exe
+*.iss
+mysetup*
+
+# IDE
+.vs/
+*.user
+*.suo
+
+# Qt Creator
+*.pro.user
+CMakeLists.txt.user
+
+# Compiled
+*.obj
+*.ilk
+*.pdb
+
+# Temp
+test_install/
+install_test_log.txt
