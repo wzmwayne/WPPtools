@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WPStools — WPS PPT 触屏辅助工具</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: -apple-system, "Microsoft YaHei", sans-serif;
+    background: #0d1117; color: #c9d1d9; line-height: 1.7;
+}
+.container { max-width: 800px; margin: 0 auto; padding: 48px 24px; }
+h1 { font-size: 2rem; margin-bottom: 4px; }
+h1 small { font-size: 1rem; color: #8b949e; font-weight: 400; }
+h2 { font-size: 1.3rem; margin: 32px 0 12px; color: #58a6ff; }
+p, li { color: #8b949e; }
+a { color: #58a6ff; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.download {
+    display: inline-block; margin: 8px 8px 8px 0;
+    padding: 12px 28px; background: #238636; color: #fff !important;
+    border-radius: 6px; font-weight: 600; font-size: 1rem;
+    text-decoration: none !important;
+}
+.download:hover { background: #2ea043; }
+.download small { display: block; font-weight: 400; font-size: .8rem; opacity: .75; }
+.features { list-style: none; }
+.features li::before { content: "✓ "; color: #3fb950; font-weight: 700; }
+hr { border: none; border-top: 1px solid #30363d; margin: 40px 0; }
+.footer { font-size: .85rem; color: #484f58; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>WPStools <small>v1.0.0</small></h1>
+<p>在触屏设备上使用 WPS 演示放映幻灯片时，提供悬浮翻页控件和工具栏，无需键盘即可操作。</p>
+
+<h2>功能</h2>
+<ul class="features">
+<li>屏幕两侧半透明翻页按钮（上一页 / 下一页）</li>
+<li>底部工具栏：切换鼠标 / 笔 / 橡皮擦模式</li>
+<li>一键退出放映，支持多级重试（Esc → Alt+D → 强杀）</li>
+<li>配置面板：调节透明度、尺寸、边缘距离等</li>
+<li>通过 Task Scheduler 实现开机自启（非注册表）</li>
+<li>自动检测 WPS 放映，显示/隐藏控件</li>
+</ul>
+
+<h2>下载</h2>
+<p>
+<a class="download" href="https://github.com/wzmwayne/WPPtools/releases/download/v1.0.0/WPPtools_offline.exe">
+    <span>WPPtools_offline.exe</span>
+    <small>离线安装包（含 Qt 运行时，~50 MB）</small>
+</a>
+<a class="download" href="https://github.com/wzmwayne/WPPtools/releases/download/v1.0.0/WPPtools_online.exe">
+    <span>WPPtools_online.exe</span>
+    <small>在线安装包（自动下载 Qt 运行时，~5 MB）</small>
+</a>
+</p>
+
+<h2>使用</h2>
+<ol>
+<li>运行 <code>WPPTouchHelper.exe</code>（后台常驻，无托盘图标）</li>
+<li>打开 WPS 演示并开始放映幻灯片</li>
+<li>屏幕两侧出现翻页按钮，底部出现工具栏</li>
+<li>运行 <code>WPStoolsPanel.exe</code> 打开配置面板</li>
+</ol>
+
+<h2>构建</h2>
+<p>需 MSVC 2022 BuildTools + Qt 6.x（msvc2022_64）。运行 <code>build.bat</code> 一键构建。</p>
+
+<h2>开源许可</h2>
+<p>GNU General Public License v3.0 — <a href="https://github.com/wzmwayne/WPPtools/blob/main/LICENSE">查看 LICENSE</a></p>
+
+<hr>
+<div class="footer">
+<p><a href="https://github.com/wzmwayne/WPPtools">GitHub 仓库</a></p>
+</div>
+
+</div>
+</body>
+</html>
