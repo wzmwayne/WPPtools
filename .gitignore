@@ -2,15 +2,22 @@
 build/
 dist/
 
-# Installer
-*.exe
-*.iss
-mysetup*
+# Installer outputs
+mysetup.exe
+WPStools_Installer.exe
+install/*.exe
 
 # IDE
 .vs/
 *.user
 *.suo
+
+# Archives
+*.zip
+*.7z
+
+# Old package directory
+package/
 
 # Qt Creator
 *.pro.user
