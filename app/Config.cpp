@@ -33,7 +33,7 @@ void Config::load() {
     def("toolbar_button_size", 44);
     def("control_opacity", 160);
     def("control_font_size", 32);
-    def("control_btn_size", 110);
+    def("control_btn_size", 44);
     def("control_edge_offset", 4);
 
     if (m_obj.contains("control_width"))  { m_obj.remove("control_width");  dirty = true; }
