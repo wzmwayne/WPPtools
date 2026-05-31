@@ -43,11 +43,9 @@ FloatingControl::FloatingControl(Side side, QWidget *parent)
 void FloatingControl::applyConfig() {
     auto &cfg = Config::instance();
     int s = cfg.controlBtnSize();
-    setFixedSize(s, s);
-    int btnW = s - 20;
-    int btnH = (s - 16) / 2;
-    m_prevBtn->setFixedSize(btnW, btnH);
-    m_nextBtn->setFixedSize(btnW, btnH);
+    setFixedSize(s + 20, s * 2 + 24);
+    m_prevBtn->setFixedSize(s, s);
+    m_nextBtn->setFixedSize(s, s);
 
     QString btnStyle = QString(
         "QPushButton {"
