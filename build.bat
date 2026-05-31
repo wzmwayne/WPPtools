@@ -34,7 +34,7 @@ if %errorlevel% neq 0 exit /b %errorlevel%
 
 echo === Deploying Qt DLLs ===
 windeployqt --release %BUILD_DIR%\WPPTouchHelper.exe 2>nul
-windeployqt --release %BUILD_DIR%\WPStoolsPanel.exe 2>nul
+windeployqt --release %BUILD_DIR%\TouchtoolsPanel.exe 2>nul
 
 echo.
 echo Build complete!

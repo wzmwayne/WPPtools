@@ -2,11 +2,13 @@
 ; 有关创建 Inno Setup 脚本文件的详细信息，请参阅帮助文档！
 ; 仅供非商业使用
 
-#define MyAppName "WPPtools"
+#define MyAppName "Touchtools"
 #define MyAppVersion "1.0"
 #define MyAppPublisher "wzmwayne"
 #define MyAppURL "wzml.cc.cd"
-#define MyAppExeName "WPStoolsPanel.exe"
+#define MyAppExeName "TouchtoolsPanel.exe"
+
+#define ProjectRoot "E:\Users\Wayne\Documents\program\c++\Touchtools"
 #expr EmitLanguagesSection
 
 [Setup]
@@ -31,18 +33,16 @@ ArchitecturesAllowed=x64compatible
 ; 和注册表的 64 位视图。
 ArchitecturesInstallIn64BitMode=x64compatible
 DisableProgramGroupPage=yes
-LicenseFile=e:\Users\Wayne\Documents\program\c++\WPStools\LICENSE
-; 取消注释以下行以在非管理安装模式下运行 (仅为当前用户安装)。
-;PrivilegesRequired=lowest
-OutputDir=e:\Users\Wayne\Documents\program\c++\WPStools\install
-OutputBaseFilename=WPPtools_offline
+LicenseFile={#ProjectRoot}\LICENSE
+PrivilegesRequired=lowest
+OutputDir={#ProjectRoot}\install
+OutputBaseFilename=Touchtools_offline
 SolidCompression=yes
 WizardStyle=modern dynamic
 
 [Files]
-Source: "e:\Users\Wayne\Documents\program\c++\WPStools\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "e:\Users\Wayne\Documents\program\c++\WPStools\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
-; 注意：不要在任何共享系统文件上使用 "Flags: ignoreversion" 
+Source: "{#ProjectRoot}\dist\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#ProjectRoot}\dist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

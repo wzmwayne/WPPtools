@@ -4,15 +4,15 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui Network)
 
-add_executable(WPStoolsPanel
+add_executable(TouchtoolsPanel
     PanelMain.cpp
     ConfigPanel.cpp
 )
 
-target_link_libraries(WPStoolsPanel
+target_link_libraries(TouchtoolsPanel
     Qt6::Core Qt6::Widgets Qt6::Gui Qt6::Network
 )
-set_target_properties(WPStoolsPanel PROPERTIES
+set_target_properties(TouchtoolsPanel PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
     WIN32_EXECUTABLE TRUE
 )
