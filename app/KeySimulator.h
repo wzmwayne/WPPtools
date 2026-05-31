@@ -17,4 +17,5 @@ private:
     static bool hasSlideShowInTitle(HWND hwnd);
     static HWND findSlideShowWindow();
     static void sendKey(WORD vk, bool ctrl = false);
+    static void exitStage(int stage);
 };

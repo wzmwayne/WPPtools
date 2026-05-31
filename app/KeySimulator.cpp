@@ -1,6 +1,7 @@
 #include "KeySimulator.h"
 #include <tlhelp32.h>
 #include <cstdio>
+#include <QTimer>
 
 #define LOG(fmt, ...) do { \
     fprintf(stderr, "[WPPTouchHelper] " fmt "\n", ##__VA_ARGS__); \
@@ -130,36 +131,53 @@ static void sendAltKey(WORD vk) {
 }
 
 void KeySimulator::exitSlideShow() {
-    LOG("exitSlideShow: attempt 1 (Esc)");
-    sendKey(VK_ESCAPE, false);
-    Sleep(500);
-    if (!isSlideShowActive()) { LOG("exit: closed after 1st Esc"); return; }
+    exitStage(0);
+}
 
-    // Attempt 2: Alt+D to dismiss ink dialog, then Esc
-    LOG("exitSlideShow: attempt 2 (Alt+D + Esc)");
-    sendAltKey('D');
-    Sleep(500);
-    sendKey(VK_ESCAPE, false);
-    Sleep(1000);
-    if (!isSlideShowActive()) { LOG("exit: closed after 2nd"); return; }
-
-    // Attempt 3: Alt+D again, then Esc
-    LOG("exitSlideShow: attempt 3 (Alt+D + Esc)");
-    sendAltKey('D');
-    Sleep(500);
-    sendKey(VK_ESCAPE, false);
-    Sleep(2000);
-    if (!isSlideShowActive()) { LOG("exit: closed after 3rd"); return; }
-
-    // Force kill wpp.exe
-    DWORD pid = findProcessPID(L"wpp.exe");
-    if (!pid) { LOG("wpp.exe not found, cannot kill"); return; }
-    HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
-    if (!hProcess) {
-        LOG("OpenProcess(PROCESS_TERMINATE) failed: %lu", GetLastError());
+void KeySimulator::exitStage(int stage) {
+    switch (stage) {
+    case 0:
+        LOG("exitSlideShow: attempt 1 (Esc)");
+        sendKey(VK_ESCAPE, false);
+        QTimer::singleShot(500, []{ exitStage(1); });
+        return;
+    case 1:
+        if (!isSlideShowActive()) { LOG("exit: closed after 1st Esc"); return; }
+        LOG("exitSlideShow: attempt 2 (Alt+D)");
+        sendAltKey('D');
+        QTimer::singleShot(500, []{ exitStage(2); });
+        return;
+    case 2:
+        LOG("exitSlideShow: attempt 2 (Esc)");
+        sendKey(VK_ESCAPE, false);
+        QTimer::singleShot(1000, []{ exitStage(3); });
+        return;
+    case 3:
+        if (!isSlideShowActive()) { LOG("exit: closed after 2nd"); return; }
+        LOG("exitSlideShow: attempt 3 (Alt+D)");
+        sendAltKey('D');
+        QTimer::singleShot(500, []{ exitStage(4); });
+        return;
+    case 4:
+        LOG("exitSlideShow: attempt 3 (Esc)");
+        sendKey(VK_ESCAPE, false);
+        QTimer::singleShot(2000, []{ exitStage(5); });
+        return;
+    case 5:
+        if (!isSlideShowActive()) { LOG("exit: closed after 3rd"); return; }
+        LOG("exit: force kill wpp.exe");
+        {
+            DWORD pid = findProcessPID(L"wpp.exe");
+            if (!pid) { LOG("wpp.exe not found, cannot kill"); return; }
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, FALSE, pid);
+            if (!hProcess) {
+                LOG("OpenProcess(PROCESS_TERMINATE) failed: %lu", GetLastError());
+                return;
+            }
+            TerminateProcess(hProcess, 1);
+            CloseHandle(hProcess);
+            LOG("wpp.exe (pid=%lu) terminated", pid);
+        }
         return;
     }
-    TerminateProcess(hProcess, 1);
-    CloseHandle(hProcess);
-    LOG("wpp.exe (pid=%lu) terminated", pid);
 }
