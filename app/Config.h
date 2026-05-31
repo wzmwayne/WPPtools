@@ -11,8 +11,7 @@ public:
     int toolbarButtonSize() const;
     int controlOpacity() const;
     int controlFontSize() const;
-    int controlWidth() const;
-    int controlHeight() const;
+    int controlBtnSize() const;
     int controlEdgeOffset() const;
 
     void save();

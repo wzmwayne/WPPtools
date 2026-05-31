@@ -42,9 +42,10 @@ FloatingControl::FloatingControl(Side side, QWidget *parent)
 
 void FloatingControl::applyConfig() {
     auto &cfg = Config::instance();
-    setFixedSize(cfg.controlWidth(), cfg.controlHeight());
-    int btnW = cfg.controlWidth() - 20;
-    int btnH = (cfg.controlHeight() - 16) / 2;
+    int s = cfg.controlBtnSize();
+    setFixedSize(s, s);
+    int btnW = s - 20;
+    int btnH = (s - 16) / 2;
     m_prevBtn->setFixedSize(btnW, btnH);
     m_nextBtn->setFixedSize(btnW, btnH);
 

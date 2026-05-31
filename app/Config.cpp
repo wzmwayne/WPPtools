@@ -14,7 +14,7 @@ Config::Config() {
 }
 
 QString Config::filePath() const {
-    return QCoreApplication::applicationDirPath() + "/WPStools.json";
+    return QCoreApplication::applicationDirPath() + "/touchtools.json";
 }
 
 void Config::load() {
@@ -33,9 +33,11 @@ void Config::load() {
     def("toolbar_button_size", 44);
     def("control_opacity", 160);
     def("control_font_size", 32);
-    def("control_width", 90);
-    def("control_height", 200);
+    def("control_btn_size", 110);
     def("control_edge_offset", 4);
+
+    if (m_obj.contains("control_width"))  { m_obj.remove("control_width");  dirty = true; }
+    if (m_obj.contains("control_height")) { m_obj.remove("control_height"); dirty = true; }
 
     if (dirty) save();
 }
@@ -58,6 +60,5 @@ int Config::toolbarIconSize()    const { return m_obj["toolbar_icon_size"].toInt
 int Config::toolbarButtonSize()  const { return m_obj["toolbar_button_size"].toInt(); }
 int Config::controlOpacity()     const { return m_obj["control_opacity"].toInt(); }
 int Config::controlFontSize()    const { return m_obj["control_font_size"].toInt(); }
-int Config::controlWidth()       const { return m_obj["control_width"].toInt(); }
-int Config::controlHeight()      const { return m_obj["control_height"].toInt(); }
+int Config::controlBtnSize()     const { return m_obj["control_btn_size"].toInt(); }
 int Config::controlEdgeOffset()  const { return m_obj["control_edge_offset"].toInt(); }
