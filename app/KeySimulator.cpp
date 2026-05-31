@@ -118,7 +118,6 @@ void KeySimulator::nextSlide()        { sendKey(VK_RIGHT, false); }
 void KeySimulator::prevSlide()        { sendKey(VK_LEFT, false); }
 void KeySimulator::mouseMode()        { sendKey('A', true); }
 void KeySimulator::penMode()          { sendKey('P', true); }
-void KeySimulator::highlighterMode()  { sendKey('I', true); }
 void KeySimulator::eraserMode()       { sendKey('E', true); }
 
 static void sendAltKey(WORD vk) {
