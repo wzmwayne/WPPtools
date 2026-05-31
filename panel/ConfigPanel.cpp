@@ -142,7 +142,6 @@ ConfigPanel::ConfigPanel(QWidget *parent) : QWidget(parent) {
         m_autoStartCb->setChecked(proc.exitCode() == 0
             && proc.readAllStandardOutput().contains("touchtools"));
     }
-    }
     content->addWidget(m_autoStartCb);
     connect(m_autoStartCb, &QCheckBox::toggled, this, &ConfigPanel::onAutoStartToggled);
 
@@ -325,21 +324,13 @@ void ConfigPanel::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void ConfigPanel::onAutoStartToggled(bool on) {
-    // Clean up old registry Run entry regardless
-    HKEY hKey;
-    if (RegOpenKeyExW(HKEY_CURRENT_USER,
-            L"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-            0, KEY_SET_VALUE, &hKey) == ERROR_SUCCESS) {
-        RegDeleteValueW(hKey, L"WPStools");
-        RegCloseKey(hKey);
-    }
-
     if (on) {
         QDir dir(QCoreApplication::applicationDirPath());
         QString exe = QDir::toNativeSeparators(
             dir.absoluteFilePath("WPPTouchHelper.exe"));
         if (!QFile::exists(exe)) {
             LOG("auto-start FAILED: not found at %s", qPrintable(exe));
+            m_autoStartCb->setChecked(false);
             return;
         }
 
@@ -347,15 +338,16 @@ void ConfigPanel::onAutoStartToggled(bool on) {
             "$a=New-ScheduledTaskAction -Execute '%1' -WorkingDirectory '%2'; "
             "$t=New-ScheduledTaskTrigger -AtLogOn; "
             "$s=New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries; "
-            "Register-ScheduledTask -TaskName 'WPStools' -Action $a -Trigger $t -Settings $s -Force")
+            "Register-ScheduledTask -TaskName 'touchtools' -Action $a -Trigger $t -Settings $s -Force")
             .arg(exe, QDir::toNativeSeparators(dir.absolutePath()));
-        QProcess::startDetached("powershell", { "-NoProfile", "-Command", ps });
-        LOG("auto-start enabled via scheduled task: %s", qPrintable(exe));
+
+        std::wstring wps = ps.toStdWString();
+        std::wstring args = L"-NoProfile -Command \"" + wps + L"\"";
+        ShellExecuteW(NULL, L"runas", L"powershell", args.c_str(), NULL, SW_HIDE);
     } else {
-        QProcess::startDetached("powershell", {
-            "-NoProfile", "-Command",
-            "Unregister-ScheduledTask -TaskName 'WPStools' -Confirm:$false" });
-        LOG("auto-start disabled (scheduled task removed)");
+        ShellExecuteW(NULL, L"runas", L"powershell",
+            L"-NoProfile -Command \"Unregister-ScheduledTask -TaskName 'touchtools' -Confirm:$false\"",
+            NULL, SW_HIDE);
     }
 }
 
