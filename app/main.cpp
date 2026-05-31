@@ -70,7 +70,6 @@ int main(int argc, char *argv[]) {
     };
 
     QLocalServer server;
-    server.setSocketOptions(QLocalServer::WorldAccessOption);
     server.listen("WPStoolsPipe");
     QObject::connect(&server, &QLocalServer::newConnection, [&]() {
         QLocalSocket *client = server.nextPendingConnection();
