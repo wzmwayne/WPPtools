@@ -148,10 +148,14 @@ void FloatingToolbar::showEvent(QShowEvent *event) {
 
 void FloatingToolbar::refreshLoop() {
     if (m_keepAlive) return;
-    bool active = KeySimulator::isSlideShowActive();
-    if (active != isVisible())
-        LOG("slideshow %s", active ? "started" : "ended");
-    setVisible(active);
+    if (KeySimulator::isSlideShowActive()) {
+        if (isHidden()) {
+            show();
+            raise();
+        }
+    } else {
+        if (isVisible()) hide();
+    }
 }
 
 void FloatingToolbar::onMouse()  { LOG("mouse click");  KeySimulator::mouseMode(); }
