@@ -32,7 +32,7 @@ void Config::load() {
     def("toolbar_icon_size", 28);
     def("toolbar_button_size", 44);
     def("control_opacity", 160);
-    def("control_font_size", 32);
+    def("control_font_size", 22);
     def("control_btn_size", 44);
     def("control_edge_offset", 4);
 
