@@ -5,6 +5,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QPushButton>
+#include <QTextBrowser>
 #include <QApplication>
 #include <QMouseEvent>
 
@@ -81,11 +82,52 @@ ConfigPanel::ConfigPanel(QWidget *parent) : QWidget(parent) {
         "QListWidget::item:hover { background: #282828; color: #ddd; }"
     );
     m_navList->addItem("WPPTouchHelper");
+    m_navList->addItem(QString::fromUtf8("\u5173\u4e8e Touchtools ..."));
     m_navList->setCurrentRow(0);
 
     // stacked content
     m_stack = new QStackedWidget;
+
+    // page 0: WPPTouchHelper config
     m_stack->addWidget(new WppConfigPage);
+
+    // page 1: about
+    auto *aboutPage = new QWidget;
+    auto *aboutLayout = new QVBoxLayout(aboutPage);
+    aboutLayout->setContentsMargins(24, 24, 24, 24);
+    auto *aboutTitle = new QLabel(QString::fromUtf8(
+        "<h2 style='color:#eee;margin:0 0 8px 0;'>Touchtools</h2>"
+        "<p style='color:#999;margin:0 0 16px 0;'>Windows \u7efc\u5408\u5de5\u5177\u96c6</p>"));
+    aboutTitle->setTextFormat(Qt::RichText);
+    aboutTitle->setStyleSheet("background: transparent;");
+    aboutLayout->addWidget(aboutTitle);
+
+    auto *aboutText = new QTextBrowser;
+    aboutText->setOpenExternalLinks(true);
+    aboutText->setHtml(QString::fromUtf8(
+        "<hr style='border-color:#333;'>"
+        "<p>\u7248\u6743 (C) 2026 Wayne</p>"
+        "<p>\u672c\u7a0b\u5e8f\u662f\u81ea\u7531\u8f6f\u4ef6\uff1a"
+        "\u60a8\u53ef\u4ee5\u91cd\u65b0\u53d1\u5e03\u5b83\u6216\u4fee\u6539\u5b83\uff0c"
+        "\u524d\u63d0\u662f\u9075\u5b88 "
+        "<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GNU General Public License v3</a>\u3002</p>"
+        "<p>\u672c\u7a0b\u5e8f\u53d1\u5e03\u65f6\u5e0c\u671b\u5b83\u6709\u7528\uff0c"
+        "\u4f46\u4e0d\u63d0\u4f9b\u4efb\u4f55\u4fdd\u8bc1\uff1b"
+        "\u65e0\u4e8b\u5148\u7684\u5546\u4e1a\u6027\u6216\u7279\u5b9a\u76ee\u7684\u9002\u7528\u6027\u4fdd\u8bc1\u3002</p>"
+        "<hr style='border-color:#333;'>"
+        "<p>\u6b64\u7a0b\u5e8f\u4f7f\u7528 Qt \u6846\u67b6\u5f00\u53d1\u3002"
+        "Qt \u662f The Qt Company \u7684\u5546\u6807\u3002</p>"
+        "<p>\u60a8\u53ef\u4ee5\u4ece\u4ee5\u4e0b\u94fe\u63a5\u83b7\u53d6 Qt \u6e90\u4ee3\u7801\uff1a"
+        "<br><a href=\"https://download.qt.io/\">https://download.qt.io/</a></p>"
+        "<p>\u6216\u4f7f\u7528\u672c\u5730 Qt \u5b89\u88c5\u76ee\u5f55\u4e2d\u7684\u6e90\u4ee3\u7801\uff1a"
+        "<br>E:\\Qt\\6.11.1\\Src</p>"
+    ));
+    aboutText->setStyleSheet(
+        "QTextBrowser { background: transparent; border: none; color: #bbb; }"
+        "a { color: #6af; }"
+    );
+    aboutLayout->addWidget(aboutText, 1);
+    m_stack->addWidget(aboutPage);
 
     body->addWidget(m_navList);
     body->addWidget(m_stack, 1);

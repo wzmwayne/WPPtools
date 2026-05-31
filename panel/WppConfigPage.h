@@ -17,7 +17,6 @@ private slots:
     void onStart();
     void onStop();
     void onSave();
-    void onAbout();
     void onAutoStartToggled(bool on);
 
 private:
@@ -31,7 +30,6 @@ private:
     QPushButton *m_startBtn;
     QPushButton *m_stopBtn;
     QPushButton *m_saveBtn;
-    QPushButton *m_aboutBtn;
     QCheckBox *m_autoStartCb;
     QTimer *m_timer;
     QJsonObject m_cfg;

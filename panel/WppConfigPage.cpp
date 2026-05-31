@@ -9,10 +9,6 @@
 #include <QJsonParseError>
 #include <QCoreApplication>
 #include <QLocalSocket>
-#include <QDialog>
-#include <QTextBrowser>
-#include <QDesktopServices>
-#include <QUrl>
 #include <windows.h>
 #include <cstdio>
 
@@ -94,21 +90,11 @@ WppConfigPage::WppConfigPage(QWidget *parent) : QWidget(parent) {
     );
     root->addWidget(m_saveBtn);
 
-    // about
-    m_aboutBtn = new QPushButton(QString::fromUtf8("\u5173\u4e8e Touchtools ..."));
-    m_aboutBtn->setStyleSheet(
-        "QPushButton { background: #2a2a2a; color: #999;"
-        "padding: 5px 0; border-radius: 4px; }"
-        "QPushButton:hover { color: #ddd; background: #3a3a3a; }"
-    );
-    root->addWidget(m_aboutBtn);
-
     root->addStretch();
 
     connect(m_startBtn, &QPushButton::clicked, this, &WppConfigPage::onStart);
     connect(m_stopBtn,  &QPushButton::clicked, this, &WppConfigPage::onStop);
     connect(m_saveBtn,  &QPushButton::clicked, this, &WppConfigPage::onSave);
-    connect(m_aboutBtn, &QPushButton::clicked, this, &WppConfigPage::onAbout);
 
     loadCfg();
     updateStatus();
@@ -197,50 +183,6 @@ void WppConfigPage::onSave() {
         sock.waitForBytesWritten(500);
         sock.disconnectFromServer();
     }
-}
-
-void WppConfigPage::onAbout() {
-    auto *dlg = new QDialog(this);
-    dlg->setWindowTitle(QString::fromUtf8("\u5173\u4e8e Touchtools"));
-    dlg->resize(520, 400);
-    auto *vl = new QVBoxLayout(dlg);
-    auto *tb = new QTextBrowser(dlg);
-    tb->setOpenExternalLinks(true);
-    tb->setHtml(QString::fromUtf8(
-        "<h2>Touchtools</h2>"
-        "<p>Windows \u7efc\u5408\u5de5\u5177\u96c6</p>"
-        "<hr>"
-        "<p>\u7248\u6743 (C) 2026 Wayne</p>"
-        "<p>\u672c\u7a0b\u5e8f\u662f\u81ea\u7531\u8f6f\u4ef6\uff1a"
-        "\u60a8\u53ef\u4ee5\u91cd\u65b0\u53d1\u5e03\u5b83\u6216\u4fee\u6539\u5b83\uff0c"
-        "\u524d\u63d0\u662f\u9075\u5b88 "
-        "<a href=\"https://www.gnu.org/licenses/gpl-3.0.html\">GNU General Public License v3</a>\u3002</p>"
-        "<p>\u672c\u7a0b\u5e8f\u53d1\u5e03\u65f6\u5e0c\u671b\u5b83\u6709\u7528\uff0c"
-        "\u4f46\u4e0d\u63d0\u4f9b\u4efb\u4f55\u4fdd\u8bc1\uff1b"
-        "\u65e0\u4e8b\u5148\u7684\u5546\u4e1a\u6027\u6216\u7279\u5b9a\u76ee\u7684\u9002\u7528\u6027\u4fdd\u8bc1\u3002</p>"
-        "<hr>"
-        "<p>\u6b64\u7a0b\u5e8f\u4f7f\u7528 Qt \u6846\u67b6\u5f00\u53d1\u3002"
-        "Qt \u662f The Qt Company \u7684\u5546\u6807\u3002</p>"
-        "<p>\u60a8\u53ef\u4ee5\u4ece\u4ee5\u4e0b\u94fe\u63a5\u83b7\u53d6 Qt \u6e90\u4ee3\u7801\uff1a"
-        "<br><a href=\"https://download.qt.io/\">https://download.qt.io/</a></p>"
-        "<p>\u6216\u4f7f\u7528\u672c\u5730 Qt \u5b89\u88c5\u76ee\u5f55\u4e2d\u7684\u6e90\u4ee3\u7801\uff1a"
-        "<br>E:\\Qt\\6.11.1\\Src</p>"
-    ));
-    vl->addWidget(tb);
-    auto *closeBtn = new QPushButton(QString::fromUtf8("\u5173\u95ed"));
-    closeBtn->setStyleSheet(
-        "QPushButton { background: #555; color: #fff; padding: 6px 20px; border-radius: 4px; }"
-        "QPushButton:hover { background: #666; }"
-    );
-    vl->addWidget(closeBtn, 0, Qt::AlignRight);
-    connect(closeBtn, &QPushButton::clicked, dlg, &QDialog::accept);
-    dlg->setStyleSheet(
-        "QWidget { background: #1a1a1a; color: #ccc; font-size: 13px; }"
-        "QTextBrowser { background: transparent; border: none; }"
-        "a { color: #6af; }"
-    );
-    dlg->exec();
-    dlg->deleteLater();
 }
 
 void WppConfigPage::onAutoStartToggled(bool on) {
