@@ -176,10 +176,13 @@ ConfigPanel::ConfigPanel(QWidget *parent) : QWidget(parent) {
 }
 
 void ConfigPanel::loadCfg() {
-    QString path = QCoreApplication::applicationDirPath() + "/WPStools.json";
+    QString path = QCoreApplication::applicationDirPath() + "/touchtools.json";
     QFile f(path);
     if (f.open(QIODevice::ReadOnly)) {
-        m_cfg = QJsonDocument::fromJson(f.readAll()).object();
+        QJsonParseError err;
+        m_cfg = QJsonDocument::fromJson(f.readAll(), &err).object();
+        if (err.error != QJsonParseError::NoError)
+            LOG("loadCfg: JSON parse error: %s", qPrintable(err.errorString()));
         f.close();
     }
     for (auto &e : m_entries) {
@@ -192,7 +195,7 @@ void ConfigPanel::loadCfg() {
 void ConfigPanel::saveCfg() {
     for (auto &e : m_entries)
         m_cfg[e.key] = e.sl->value();
-    QString path = QCoreApplication::applicationDirPath() + "/WPStools.json";
+    QString path = QCoreApplication::applicationDirPath() + "/touchtools.json";
     QFile f(path);
     if (f.open(QIODevice::WriteOnly)) {
         f.write(QJsonDocument(m_cfg).toJson());
