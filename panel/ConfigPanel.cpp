@@ -133,18 +133,15 @@ ConfigPanel::ConfigPanel(QWidget *parent) : QWidget(parent) {
         "QCheckBox::indicator { width: 16px; height: 16px; }"
     );
     {
-        HKEY hKey;
-        LONG ret = RegOpenKeyExW(HKEY_CURRENT_USER,
-            L"Software\\Microsoft\\Windows\\CurrentVersion\\Run",
-            0, KEY_READ, &hKey);
-        if (ret == ERROR_SUCCESS) {
-            wchar_t buf[MAX_PATH] = {};
-            DWORD sz = sizeof(buf);
-            ret = RegQueryValueExW(hKey, L"WPStools", NULL, NULL,
-                                   (LPBYTE)buf, &sz);
-            m_autoStartCb->setChecked(ret == ERROR_SUCCESS && buf[0]);
-            RegCloseKey(hKey);
-        }
+        QProcess proc;
+        proc.start("powershell", {
+            "-NoProfile", "-Command",
+            "Get-ScheduledTask -TaskName 'touchtools' -ErrorAction SilentlyContinue"
+        });
+        proc.waitForFinished(3000);
+        m_autoStartCb->setChecked(proc.exitCode() == 0
+            && proc.readAllStandardOutput().contains("touchtools"));
+    }
     }
     content->addWidget(m_autoStartCb);
     connect(m_autoStartCb, &QCheckBox::toggled, this, &ConfigPanel::onAutoStartToggled);
