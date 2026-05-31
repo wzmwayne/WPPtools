@@ -66,12 +66,23 @@ FloatingToolbar::FloatingToolbar(QWidget *parent)
     connect(m_eraserBtn, &QPushButton::clicked, this, &FloatingToolbar::onEraser);
     connect(m_exitBtn, &QPushButton::clicked, this, &FloatingToolbar::onExit);
 
+    m_mouseBtn->setAttribute(Qt::WA_AcceptTouchEvents);
+    m_penBtn->setAttribute(Qt::WA_AcceptTouchEvents);
+    m_eraserBtn->setAttribute(Qt::WA_AcceptTouchEvents);
+    m_exitBtn->setAttribute(Qt::WA_AcceptTouchEvents);
+
     applyConfig();
     hide();
 
     m_timer.setInterval(500);
     connect(&m_timer, &QTimer::timeout, this, &FloatingToolbar::refreshLoop);
     m_timer.start();
+
+    m_pulseTimer.setInterval(30000);
+    connect(&m_pulseTimer, &QTimer::timeout, this, &FloatingToolbar::applyCurrentTool);
+    m_pulseTimer.start();
+
+    selectTool(Tool::Mouse);
 }
 
 void FloatingToolbar::applyConfig() {
@@ -93,40 +104,7 @@ void FloatingToolbar::applyConfig() {
     m_exitBtn->setIconSize(is);
     m_exitBtn->setFixedSize(bs, bs);
 
-    int op = cfg.toolbarOpacity();
-    QString btnStyle = QString(
-        "QPushButton {"
-            "background: rgba(0, 0, 0, %1);"
-            "border: 1px solid rgba(255, 255, 255, 40);"
-            "border-radius: 8px;"
-        "}"
-        "QPushButton:hover {"
-            "background: rgba(0, 0, 0, 200);"
-            "border: 1px solid rgba(255, 255, 255, 100);"
-        "}"
-        "QPushButton:pressed {"
-            "background: rgba(0, 120, 215, 200);"
-        "}"
-    ).arg(op);
-    QString exitStyle = QString(
-        "QPushButton {"
-            "background: rgba(180, 30, 30, %1);"
-            "border: 1px solid rgba(255, 80, 80, 60);"
-            "border-radius: 8px;"
-        "}"
-        "QPushButton:hover {"
-            "background: rgba(200, 40, 40, 220);"
-            "border: 1px solid rgba(255, 100, 100, 120);"
-        "}"
-        "QPushButton:pressed {"
-            "background: rgba(0, 120, 215, 200);"
-        "}"
-    ).arg(qMin(255, op + 20));
-
-    m_mouseBtn->setStyleSheet(btnStyle);
-    m_penBtn->setStyleSheet(btnStyle);
-    m_eraserBtn->setStyleSheet(btnStyle);
-    m_exitBtn->setStyleSheet(exitStyle);
+    updateButtonStyles();
     reposition();
 }
 
@@ -158,7 +136,59 @@ void FloatingToolbar::refreshLoop() {
     }
 }
 
-void FloatingToolbar::onMouse()  { LOG("mouse click");  KeySimulator::mouseMode(); }
-void FloatingToolbar::onPen()    { LOG("pen click");    KeySimulator::penMode(); }
-void FloatingToolbar::onEraser() { LOG("eraser click"); KeySimulator::eraserMode(); }
+void FloatingToolbar::onMouse()  { LOG("mouse click");  selectTool(Tool::Mouse); }
+void FloatingToolbar::onPen()    { LOG("pen click");    selectTool(Tool::Pen); }
+void FloatingToolbar::onEraser() { LOG("eraser click"); selectTool(Tool::Eraser); }
 void FloatingToolbar::onExit()   { LOG("exit click");   KeySimulator::exitSlideShow(); }
+
+void FloatingToolbar::selectTool(Tool t) {
+    m_selectedTool = t;
+    updateButtonStyles();
+    applyCurrentTool();
+}
+
+void FloatingToolbar::applyCurrentTool() {
+    switch (m_selectedTool) {
+    case Tool::Mouse:  KeySimulator::mouseMode();  break;
+    case Tool::Pen:    KeySimulator::penMode();    break;
+    case Tool::Eraser: KeySimulator::eraserMode(); break;
+    }
+}
+
+void FloatingToolbar::updateButtonStyles() {
+    auto &cfg = Config::instance();
+    int op = cfg.toolbarOpacity();
+
+    auto toolStyle = [&](bool selected) {
+        if (selected)
+            return QString("QPushButton { background: rgba(0, 120, 215, 200); border: 1px solid rgba(255, 255, 255, 100); border-radius: 8px; }");
+        return QString(
+            "QPushButton {"
+                "background: rgba(0, 0, 0, %1);"
+                "border: 1px solid rgba(255, 255, 255, 40);"
+                "border-radius: 8px;"
+            "}"
+            "QPushButton:hover {"
+                "background: rgba(0, 0, 0, 200);"
+                "border: 1px solid rgba(255, 255, 255, 100);"
+            "}"
+        ).arg(op);
+    };
+
+    m_mouseBtn->setStyleSheet(toolStyle(m_selectedTool == Tool::Mouse));
+    m_penBtn->setStyleSheet(toolStyle(m_selectedTool == Tool::Pen));
+    m_eraserBtn->setStyleSheet(toolStyle(m_selectedTool == Tool::Eraser));
+
+    QString exitStyle = QString(
+        "QPushButton {"
+            "background: rgba(180, 30, 30, %1);"
+            "border: 1px solid rgba(255, 80, 80, 60);"
+            "border-radius: 8px;"
+        "}"
+        "QPushButton:hover {"
+            "background: rgba(200, 40, 40, 220);"
+            "border: 1px solid rgba(255, 100, 100, 120);"
+        "}"
+    ).arg(qMin(255, op + 20));
+    m_exitBtn->setStyleSheet(exitStyle);
+}

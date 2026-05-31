@@ -24,6 +24,9 @@ FloatingControl::FloatingControl(Side side, QWidget *parent)
     m_prevBtn = new QPushButton("\u25b2");
     m_nextBtn = new QPushButton("\u25bc");
 
+    m_prevBtn->setAttribute(Qt::WA_AcceptTouchEvents);
+    m_nextBtn->setAttribute(Qt::WA_AcceptTouchEvents);
+
     layout->addStretch();
     layout->addWidget(m_prevBtn, 0, Qt::AlignCenter);
     layout->addWidget(m_nextBtn, 0, Qt::AlignCenter);
@@ -31,6 +34,19 @@ FloatingControl::FloatingControl(Side side, QWidget *parent)
 
     connect(m_prevBtn, &QPushButton::clicked, this, &FloatingControl::onPrev);
     connect(m_nextBtn, &QPushButton::clicked, this, &FloatingControl::onNext);
+
+    auto touchPressed = [this](QPushButton *btn) {
+        connect(btn, &QPushButton::pressed, this, [this, btn]() {
+            QString s = btn->styleSheet();
+            s.replace("background: rgba(0, 0, 0,", "background: rgba(0, 120, 215,");
+            btn->setStyleSheet(s);
+        });
+        connect(btn, &QPushButton::released, this, [this]() {
+            applyConfig();
+        });
+    };
+    touchPressed(m_prevBtn);
+    touchPressed(m_nextBtn);
 
     applyConfig();
     hide();
@@ -58,9 +74,6 @@ void FloatingControl::applyConfig() {
         "QPushButton:hover {"
             "background: rgba(0, 0, 0, 200);"
             "border: 1px solid rgba(255, 255, 255, 120);"
-        "}"
-        "QPushButton:pressed {"
-            "background: rgba(0, 120, 215, 200);"
         "}"
     ).arg(cfg.controlFontSize()).arg(cfg.controlOpacity());
     m_prevBtn->setStyleSheet(btnStyle);
