@@ -8,7 +8,6 @@ public:
     static void prevSlide();
     static void mouseMode();
     static void penMode();
-    static void highlighterMode();
     static void eraserMode();
     static void exitSlideShow();
 

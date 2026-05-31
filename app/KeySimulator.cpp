@@ -120,15 +120,6 @@ void KeySimulator::penMode()          { sendKey('P', true); }
 void KeySimulator::highlighterMode()  { sendKey('I', true); }
 void KeySimulator::eraserMode()       { sendKey('E', true); }
 
-static void bringToFront(HWND hwnd) {
-    DWORD targetTid = GetWindowThreadProcessId(hwnd, NULL);
-    DWORD ourTid = GetCurrentThreadId();
-    AttachThreadInput(ourTid, targetTid, TRUE);
-    SetForegroundWindow(hwnd);
-    BringWindowToTop(hwnd);
-    AttachThreadInput(ourTid, targetTid, FALSE);
-}
-
 static void sendAltKey(WORD vk) {
     INPUT in[4] = {};
     in[0].type = INPUT_KEYBOARD; in[0].ki.wVk = VK_MENU;
