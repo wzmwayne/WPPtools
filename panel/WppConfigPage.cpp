@@ -55,7 +55,7 @@ WppConfigPage::WppConfigPage(QWidget *parent) : QWidget(parent) {
     auto *cg = new QGroupBox(QString::fromUtf8("\u4fa7\u8fb9\u63a7\u5236\u8bbe\u7f6e"));
     auto *cl = new QVBoxLayout(cg);
     cl->addWidget(makeSlider(QString::fromUtf8("\u900f\u660e\u5ea6"),      "control_opacity",      0, 255, 160));
-    cl->addWidget(makeSlider(QString::fromUtf8("\u5b57\u53f7"),            "control_font_size",    16, 64, 32));
+    cl->addWidget(makeSlider(QString::fromUtf8("\u5b57\u53f7"),            "control_font_size",    16, 64, 22));
     cl->addWidget(makeSlider(QString::fromUtf8("\u6309\u94ae\u5927\u5c0f"), "control_btn_size",     28, 100, 44));
     cl->addWidget(makeSlider(QString::fromUtf8("\u8fb9\u7f18\u8ddd\u79bb"), "control_edge_offset",   0, 50, 4));
     root->addWidget(cg);
