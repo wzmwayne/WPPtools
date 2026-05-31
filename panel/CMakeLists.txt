@@ -7,6 +7,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Widgets Gui Network)
 add_executable(TouchtoolsPanel
     PanelMain.cpp
     ConfigPanel.cpp
+    WppConfigPage.cpp
 )
 
 target_link_libraries(TouchtoolsPanel

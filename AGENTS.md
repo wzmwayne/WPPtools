@@ -48,7 +48,8 @@ WPPTouchHelper (app/)
 
 TouchtoolsPanel (panel/)
 ├── PanelMain.cpp — 入口，创建 ConfigPanel
-└── ConfigPanel.h/.cpp — 无边框暗色 UI，滑块调节参数，开机自启开关
+├── ConfigPanel.h/.cpp — 无边框主框架，标题栏 + 左侧导航 + QStackedWidget
+└── WppConfigPage.h/.cpp — WPPTouchHelper 配置页（滑块、开机自启、IPC 控制）
 ```
 
 ## IPC（两个 exe 之间的通信）
